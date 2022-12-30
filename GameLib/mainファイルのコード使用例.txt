@@ -1,0 +1,435 @@
+#include<iostream>
+#include<time.h>
+#include"Font.h"
+#include"GL/glut.h"
+#include"Texture.h"
+#include"Rect.h"
+#include"Ball.h"
+#include"Paddle.h"
+#include<vector>
+#include"Audio.h"
+
+using namespace std;
+#define SCREEN_WIDTH 256
+#define SCREEN_HEIGHT 256
+
+
+
+
+//キーボードの入力を保存するする配列
+bool keys[256];
+
+//ボールの配列
+Ball balls[BALL_MAX];
+
+//パドル
+Paddle paddle;
+
+//Font font;
+//四角形の描画
+//Rect rect1 = Rect(vec2(100, 100), vec2(100, 200));
+//Rect rect2 = Rect(vec2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2), vec2(200, 100));
+//点の描画
+//vec2 point = vec2(WINDOW_WIDTH/2,WINDOW_HEIGHT/2);
+
+//Ball ball(windowSize);
+
+void Display()
+{
+	//画面をクリアする
+	glClear(GL_COLOR_BUFFER_BIT);
+	//2D変換
+	//射影行列モードを使用する
+	glMatrixMode(GL_PROJECTION);
+	//行列を毎フレーム初期化
+	glLoadIdentity();
+
+	//二次元空間を定義
+	gluOrtho2D(0,SCREEN_WIDTH,SCREEN_HEIGHT,0);
+
+	//モデルビュー行列モードを使用する
+	glMatrixMode(GL_MODELVIEW);
+	//行列を毎フレーム初期化
+	glLoadIdentity();
+
+	//ball.DrawBall();
+	/*glColor3ub(0xff, 0xff, 0xff);
+	paddle.Draw();
+
+	unsigned char colors[6][3] =
+	{
+		{0xff,0x00,0x00},
+		{0x00,0xff,0x00},
+		{0x00,0x00,0xff},
+		{0xff,0xff,0x00},
+		{0x00,0xff,0xff},
+		{0xff,0x00,0xff},
+		
+	};
+
+	for (int i = 0; i < BALL_MAX; i++)
+	{
+		glColor3ub(colors[i % 6][0], colors[i % 6][1], colors[i % 6][2]);
+		balls[i].DrawBall();
+	}*/
+
+	//if (rect1.IntersectRect(rect2))
+	//{
+	//	glColor3ub(0xff,0,0);
+	//}
+	//else
+	//{
+	//	glColor3ub(0, 0, 0xff);
+	//}
+	
+	//テクスチャ
+	//unsigned char pixcels[] =
+	//{
+	//	//赤
+	//	0xff,0x00,0x00,
+	//	//緑
+	//	0x00,0xff,0x00,
+	//	//青
+	//	0x00,0x00,0xff,
+	//	//黄
+	//	0xff,0xff,0x00,
+	//};
+
+	/// <summary>
+	/// ///////////////////////////////////////////////////////////////////////////////
+	/// </summary>
+	
+	//テクスチャの読み込み
+	glEnable(GL_TEXTURE_2D);
+	//////////////////////////////////////////////////////////////////////////////////
+
+	//アルファブレンドを有効にする////////////////////////////////
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	//////////////////////////////////////////////////////////////
+	//四角形の描画
+	/*Rect rect = { {0,0},{448,256} };
+	rect.DrawRect();*/
+
+	//Rect(vec2(0, 0), vec2(256, 256)).DrawRect();
+
+	/*Rect rect2 = { {32,32},{448,256} };
+	rect2.DrawRect();*/
+
+	//glColor3ub(0, 0xff, 0);
+	//rect2.DrawRect();
+	
+
+	//glTranslatef(WINDOW_WIDTH/2,WINDOW_HEIGHT/2,0);
+
+	//モデルビュー行列を使用して、毎フレーム回転させるには
+	static float angle;
+
+	//Bキーが押されたら、1度回転
+	if (keys['b'])
+	{
+		angle += 1;
+	}
+	if (keys['a'])
+	{
+		angle -= 1;
+	}
+
+	//(int)angle %= 360;
+
+	
+	//glTranslatef(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0);
+	/*glRotatef(angle, 0, 0, 1);
+	glScalef(256, -256, 1);
+	glutWireTeapot(1);*/
+
+	Color color;
+
+	
+	
+
+	////Text2D(0, WINDOW_HEIGHT - FontGetSize() * 1.5, "angle : %f", angle);
+	////Text2D(0, WINDOW_HEIGHT - FontGetSize() * 1.5, "angle : %f", angle);
+	////Text2D(0, WINDOW_HEIGHT - FontGetSize() * 1.5 - 5,color.White, "Max : %f", FontGetThicknessMax());
+	//FontBegin();
+	//FontColor(color.White);
+	//FontSetSize(FONT_DEFAULT_SIZE / 2);
+	//float lineHeight = FontGetSize() * 1.5;
+	//float y = WINDOW_HEIGHT - lineHeight * 2;
+	//FontSetThickness(FontGetThicknessMax()/2);
+	//FontSetPosition(0, y);
+	//FontDraw("abc\n"); FontDraw("def");
+	//
+	////FontDraw("angle : %f", angle);
+
+	//FontEnd();
+
+		//Text2D(x+= FontGetThicknessMax() / 2, 0, color.White, 8, FontGetThicknessMax() / 2, "%X",i%16);
+
+	//FontScreenSize(256*2,256*2);
+	FontBegin();
+	FontSetPosition(0, 0);
+	FontSetXYSize(vec2(8,8));
+	//FontColor(color.Red);
+	
+	
+	//FontDraw("HELLO");
+	float x = 0;
+	for (int i = 0; i < 32 * 32; i++)
+	{
+
+		FontDraw("%X", i % 16);
+		if (i % 32 == 31)
+		{
+			FontDraw("\n");
+		}
+	}
+	FontEnd();
+
+
+	//FontSetFont(FONT_FONT_MONO_ROMAN);
+	//Text2D(0, 0, color.White,  FontGetThicknessMax(), "HELLO");
+
+	//バッファを切り替える
+	glutSwapBuffers();
+}
+
+//PCの処理速度に依存しないようにする処理
+void Timer(int value)
+{
+	/*float addpos = 3;
+	if (keys['w'])
+		rect1.GetPosition().y -= addpos;
+	if(keys['s'])
+		rect1.GetPosition().y += addpos;
+	if(keys['a'])
+		rect1.GetPosition().x -= addpos;
+	if(keys['d'])
+		rect1.GetPosition().x += addpos;*/
+
+	//ball.Update();
+	
+
+
+	/*for (int i = 0; i < BALL_MAX; i++)
+	{
+		balls[i].Update();
+		ReflectInWindow(balls[i]);
+
+		if (paddle.IntersectBall(balls[i]) )
+		{
+			balls[i].SetPosition(balls[i].GetLastPosition());
+			balls[i].SetSpeedX(balls[i].GetSpeed().x * -1.0f);
+		}
+	}*/
+
+	//オーディオをアップデートする
+	AudioUpdate();
+
+
+	//再起
+	glutTimerFunc(1000/60, Timer, 0);
+	//再描画
+	glutPostRedisplay();
+}
+
+//画面サイズが変更された時の処理
+void Reshape(int width,int height)
+{
+	std::cout << "reshshape: width:" << width << " height:" << height << std::endl;
+	//画面サイズを変更したときに、見切れる部分をなくす
+	glViewport(0,0,width,height);//GLint x, GLint y, GLsizei width, GLsizei height
+
+}
+
+//x y はマウスの座標
+void Keyboard(unsigned char key, int x, int y)
+{
+	printf("Keyborad : \'%c\' (%#x)\n",key,key);
+	keys[key] = true;
+
+	if ((key >= '0') && (key <= '3'))
+	{
+		int channel = key - '0';
+		AudioStop(channel);
+
+		switch (channel)
+		{
+		case AUDIO_CHANNEL_PULSE0:
+			AudioGain(channel,AUDIO_DEFAULT_GAIN);
+			AudioFreq(channel,440 * powf(2, (0 / 12.0f)));
+			break;
+		case AUDIO_CHANNEL_PULSE1:
+			AudioGain(channel, AUDIO_DEFAULT_GAIN * 0.5);
+			AudioFreq(channel, 440 * powf(2, (0 / 12.0f)));
+			break;
+		case AUDIO_CHANNEL_TRIANGLE:
+			AudioFreq(channel, 440 * powf(2, (3 / 12.0f)));
+			break;
+		case AUDIO_CHANNEL_NOISE://ドラム
+			AudioDecay(channel, 0.8f);
+			break;
+;
+		}
+
+		AudioPlay(channel);
+	}
+
+	//音の再生時間をセットする
+	//AudioLength(500);
+
+	//減衰をセット　音が徐々に変わる 決定ボタンやアイテム取得に使えそう
+	//AudioDecay(0.9);
+
+	//ピッチターゲットを設定
+	//AudioPitchTartget(0.25);//もとのピッチが1のため、4と設定すると1オクターブ上がる 逆に1オクターブは0.5下げる
+
+	//スウィープをセット 魔法の効果音みたいになる
+	//値を変える結構音が変わる
+	//AudioSweep(0.95f);
+
+	//周波数の設定 1オクターブ 440Hz
+	//AudioFreq(440/2);
+
+	//Escキーを押したら終了する
+	//if (key == 0x1b)
+	//{
+	//	exit(0);
+	//}
+
+	switch (key)
+	{
+	case 0x1b:
+		exit(0);
+		break;
+	//case 'p':
+	//	AudioStop();
+	//	AudioWaveForm(AUDIO_WAVEFORM_NOISE_LONG);
+	//	AudioFreq(AudioIndexToFreq(9))  ; // AudioIndexToFreq(10));//平均的な周波数
+	//	//AudioDecay(0.9);
+	//	//AudioSweep(1.1f, 1789772.5f / 4);
+	//	AudioPlay();
+	//	break;
+	//case 's':
+	//	AudioStop();
+	//	break;
+	}
+
+	//if ((key >= '0') && (key <= '4'))
+	//{
+	//	AudioStop();
+	//	AudioWaveForm(key - '0');
+	//	AudioFreq(440);//最初の音階
+	//	AudioSweep(0.99f, 440 / 2);//音の伸び,終了する音階
+	//	AudioPlay();
+	//}
+	
+	//音階のピアノ
+	//if ((key >= '0') && (key <= '9'))
+	//{
+	//	AudioStop();
+	//	//文字を数値へ変換
+	//	int tmpKey = key - '0';
+	//	AudioWaveForm(AUDIO_WAVEFORM_PULSE_12_5);
+	//	AudioFreq(440 * powf(2, 1+(tmpKey/12.0f)));
+	//	//AudioDecay(0.9f);
+	//	AudioSweep(0.95f,440/2);
+	//	AudioPlay();
+	//}
+
+	
+}
+
+//キーボードを離した時の処理
+void KeyboardUp(unsigned char key, int x, int y)
+{
+	printf("KeyboradUp : \'%c\' (%#x)\n", key, key);
+	keys[key] = false;
+	if ((key >= '0') && (key <= '3'))
+	{
+		int channel = key - '0';
+		AudioStop(channel);
+	}
+}
+
+//マウスが動いたときの処理
+void PassiveMotion(int x,int y)
+{
+	vec2 newPos = vec2(x,y);
+	paddle.SetPosition(newPos);
+}
+
+
+int main(int argc,char* argv[])
+{
+	//Ballの初期化
+	//ball._speed = vec2(3, 3);
+	//srand((unsigned)time(NULL));
+
+	//for (int i = 0; i < BALL_MAX; i++)
+	//{
+	//	balls[i].SetPosition( (vec2(rand() % windowSize.x, rand() % windowSize.y))); 
+	//	balls[i].SetWindowSize(windowSize);
+	//	balls[i].SetRadius(10);
+	//	//balls[i].SetSpeed(vec2((float)rand() / RAND_MAX, (float)rand() / RAND_MAX)  * 5.0f);
+	//	balls[i].SetSpeed(vec2(5,5)  * 5.0f);
+	//	//balls[i].SetSpeed( normalize(balls[i].GetSpeed()) * 5.0f);
+
+	//}
+
+	////Paddleの初期化
+	//paddle.SetHeight(300);
+
+	//オーディオの初期化
+	if (AudioInit() != 0)
+	{
+		return -1;
+	}
+
+	glutInit(&argc,argv);
+	glutInitDisplayMode(GLUT_DOUBLE);//ダブルバッファを有効にする
+	glutInitWindowPosition(0,0);
+	{
+		int width = (720 - 32) *4/3;
+		int height = 720 - 32;
+		glutInitWindowSize(width, height);
+	}
+	glutCreateWindow("title");
+
+	//フォント初期化
+	FontInitialize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	////カラーキーを設定
+	//unsigned char colorkey[] = { 0x00,0xff,0x00 };
+	//int result = TextureFromBMP("UnityChan.bmp",colorkey);
+	////テクスチャ(BMP)の読み込み
+	//if (result == -1)
+	//{
+	//	return -1;
+	//}
+
+	glutDisplayFunc(Display);
+	//glutIdleFunc(Idle);
+	glutTimerFunc(0,Timer,0);//0ミリ秒後にTimer関数を開始して,valueは0
+	//画面サイズが変更された時に呼び出される、コールバック関数
+	glutReshapeFunc(Reshape);
+	//キーボード入力
+	glutKeyboardFunc(Keyboard);// void (* callback)( unsigned char, int, int ) 
+	//キーボードを離した時の処理
+	glutKeyboardUpFunc(KeyboardUp);
+	//クリックされたマウスの移動を検出する
+	//glutMotionFunc(Motion);
+	
+	//クリックされていないマウスの移動を検出する
+	glutPassiveMotionFunc(PassiveMotion);
+
+	//キーボードのリピート（余りにも早い連続入力）を無効にする
+	//一回しか入力されない
+	glutIgnoreKeyRepeat(GL_TRUE);//int ignore
+
+
+
+	glutMainLoop();
+
+	return 0;
+}
